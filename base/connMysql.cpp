@@ -12,7 +12,9 @@ void connMysql::init() {
     m_mysql = mysql_init(nullptr);
     if (m_mysql) {
         mysql_set_character_set(m_mysql, "utf8");
+        isConnected = true;
     }
+    Connect("127.0.0.1","root","123456","IMDB",0);
 
 }
 void connMysql::uninit() {
@@ -21,6 +23,7 @@ void connMysql::uninit() {
         mysql_close(m_mysql);
         m_mysql = nullptr;
     }
+    isConnected = false;
 }
 void connMysql::freeResult() {
     if (m_result) {

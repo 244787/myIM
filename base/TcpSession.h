@@ -19,5 +19,6 @@ private:
 private:
     muduo::net::EventLoop *_loop;
     muduo::net::TcpServer _server;
+    int kHeaderLength = 4;
 
 };

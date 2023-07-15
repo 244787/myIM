@@ -16,14 +16,16 @@ public:
         const unsigned short& port);
     bool Update(const std::string& sql);
     bool Query(const std::string& sql);
+    bool MySQLIsConnected(){return isConnected;}
     MYSQL_RES* getResult();
     int affectRows();
+    void freeResult();
 private:
     connMysql();
     void init();
     void uninit();
-    void freeResult();
 private:
+    bool isConnected;
     MYSQL* m_mysql;
     MYSQL_RES* m_result;
     MYSQL_ROW m_row = nullptr;
