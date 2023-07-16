@@ -1,3 +1,6 @@
+#ifndef MSG_H_
+#define MSG_H
+
 enum class command{
     cmd_regist = 0,
     cmd_login,
@@ -34,6 +37,6 @@ enum class contentType{
     fileType
 };
 
-
+#endif
 
 

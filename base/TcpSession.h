@@ -1,4 +1,6 @@
 
+#ifndef TCPSESSION_H_
+#define TCPSESSION_H_
 #include"muduo/net/TcpServer.h"
 #include<mutex>
 #include<memory>
@@ -22,3 +24,5 @@ private:
     int kHeaderLength = 4;
 
 };
+
+#endif

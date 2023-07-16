@@ -1,3 +1,5 @@
+#ifndef CHATHANDLER_H_
+#define CHATHANDLER_H
 #include"Singleton.h"
 #include<unordered_map>
 #include<json/json.h>
@@ -30,4 +32,5 @@ private:
 
 
 };
+#endif
 

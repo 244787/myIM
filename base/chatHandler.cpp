@@ -50,7 +50,8 @@ void chatHandler::login(const muduo::net::TcpConnectionPtr& conn,Json::Value msg
     //
 }
 void chatHandler::regist(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time){
-
+    std::cout<<"开始处理注册逻辑"<<std::endl;
+    
 }
 msgHandlerFnc chatHandler::getHandler(int CmdId){
     auto it =msgHandlers.find(CmdId);

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef CONNMYSQL_H
+#define CONNMYSQL_H
 #include<string>
 #include<iostream>
 #include<mysql/mysql.h>
@@ -32,3 +33,5 @@ private:
     std::mutex mtx;
 
 };
+
+#endif

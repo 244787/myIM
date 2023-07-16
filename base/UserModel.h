@@ -6,7 +6,7 @@
 enum class UserState{
     Online = 0,
     Offline 
-} ;
+} ; 
 
 class User{
 public:
@@ -16,7 +16,7 @@ public:
     std::string getAccount(){
         return _account;
     }
-    std::string getName(){
+    std::string  (){
         return _nickname;
     }
     std::string getPassword(){
@@ -45,7 +45,6 @@ public:
             std::cout<<"MySQL 离线!\n";
             return User();
         }
-
         string sql;
         sql ="select * from User where account = \""+_account+"\";";
         std::cout<<"sql:  "<<sql<<std::endl;
@@ -59,10 +58,7 @@ public:
                 {
                     std::cout<<"res:"<<row[0]<<row[1]<<std::endl;
                     User user(row[0],row[1],"yes","ok");
-                    //User user(row[0],row[1],row[2],row[3]);
                     connMysql::GetInstance()->freeResult();
-                    //释放资源，否则内存不断泄露
-                    //mysql_free_result(res);
 
                     return user;
                 }
