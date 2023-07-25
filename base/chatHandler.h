@@ -22,19 +22,22 @@ public:
     chatHandler(const chatHandler& ) = delete;
     chatHandler operator=(const chatHandler& )= delete;
     void login(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time );
+    void logout(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time );
     void regist(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time);
     void friend_search(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time);
     void friend_add_request(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time);
     void friend_add_respond(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time);
+    void refresh_friend_list(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time);
     msgHandlerFnc getHandler(int CmdId);
 
     void sendMsgWithHead(const muduo::net::TcpConnectionPtr& _conn, Json::Value& msg );
 
 private:
     std::unordered_map<int, msgHandlerFnc>  msgHandlers;
-    std::unordered_map<int,muduo::net::TcpConnection>  userMap;
+    std::unordered_map<std::string,muduo::net::TcpConnectionPtr>  userMap;
     UserModel usrMd;
     FriendModel freindMd;
+    std::mutex mtx;
 
 
 };

@@ -6,8 +6,8 @@
 
 class User{
 public:
-    User(std::string acc = " ",std::string password = " ",std::string name = " ",
-        std::string state = "Offline"):_account(acc),_nickname(name),_password(password),_state(state){
+    User(std::string acc = " ",std::string name = " ",std::string password = " ",
+        std::string state = "Offline",std::string icon = ":/src/QQIcon/icon1.jpg"):_account(acc),_nickname(name),_password(password),_state(state),_icon(icon){
         
     }
     User(const User& usr){
@@ -15,6 +15,7 @@ public:
         _password=usr.getPassword();
         _nickname = usr.getNickName();
         _state = usr.getState();
+        _icon = usr.getIcon();
 
     }
     std::string getAccount()const{
@@ -28,6 +29,9 @@ public:
     }
     std::string getNickName() const{
         return _nickname;
+    }
+    std::string getIcon() const{
+        return _icon;
     }
     void setAccount(const std::string acc){
         std::unique_lock<std::mutex> locker(mtx);
@@ -44,12 +48,16 @@ public:
     void setState(const std::string& state){
         _state = state;
     }
+    void setIcon(const std::string& icon){
+        _icon = icon;
+    }
 
 private:
     std::string _account;
     std::string _nickname;
     std::string _password;
     std::string _state;
+    std::string _icon;
     std::mutex mtx;
 
 };
@@ -87,8 +95,8 @@ public:
                 MYSQL_ROW row = mysql_fetch_row(res);
                 if (row != nullptr)
                 {
-                    std::cout<<"res:"<<row[0]<<row[1]<<std::endl;
-                    User user(row[0],row[2],row[1],"Offline");
+                    std::cout<<"res:"<<row[0]<<row[1]<<row[2]<<row[3]<<row[4]<<std::endl;
+                    User user(row[0],row[1],row[2],row[3],row[4]);
                     connMysql::GetInstance()->freeResult();
 
                     return user;
@@ -98,6 +106,16 @@ public:
 
         }
         return User();
+    }
+    bool updateState(std::string state,std::string account){
+        if(!connMysql::GetInstance()->MySQLIsConnected()){
+            std::cout<<"MySQL 离线!\n";
+            return false;
+        }
+        char  sql[1024];
+        sprintf(sql,"update set User \"state\"=\"%s\" where \"account\" =\"%s\";",state.c_str(),account.c_str());
+        std::cout<<"sql:  "<<sql<<std::endl;
+        return  connMysql::GetInstance()->Update(sql);  
     }
 };
 
