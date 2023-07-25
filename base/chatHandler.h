@@ -9,7 +9,7 @@
 #include<muduo/net/TcpConnection.h>
 #include<functional>
 #include"UserModel.h"
-
+#include"FriendModel.h"
 using msgHandlerFnc = std::function<void(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time )>;
 
 
@@ -23,14 +23,21 @@ public:
     chatHandler operator=(const chatHandler& )= delete;
     void login(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time );
     void regist(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time);
+    void friend_search(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time);
+    void friend_add_request(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time);
+    void friend_add_respond(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time);
     msgHandlerFnc getHandler(int CmdId);
+
+    void sendMsgWithHead(const muduo::net::TcpConnectionPtr& _conn, Json::Value& msg );
 
 private:
     std::unordered_map<int, msgHandlerFnc>  msgHandlers;
     std::unordered_map<int,muduo::net::TcpConnection>  userMap;
     UserModel usrMd;
+    FriendModel freindMd;
 
 
 };
+
 #endif
 

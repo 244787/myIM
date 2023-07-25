@@ -485,6 +485,7 @@ CMakeFiles/tcp.dir/base/chatHandler.cpp.o: /home/jin/Documents/myIM/base/chatHan
   /usr/include/mysql/my_alloc.h \
   /usr/include/mysql/mysql/psi/psi_memory.h \
   /usr/include/mysql/mysql/psi/psi_base.h \
+  /home/jin/Documents/myIM/base/FriendModel.h \
   /home/jin/Documents/myIM/base/msg.h
 
 CMakeFiles/tcp.dir/base/chatSession.cpp.o: /home/jin/Documents/myIM/base/chatSession.cpp \
@@ -988,7 +989,8 @@ CMakeFiles/tcp.dir/base/tcpSession.cpp.o: /home/jin/Documents/myIM/base/tcpSessi
   /usr/include/mysql/typelib.h \
   /usr/include/mysql/my_alloc.h \
   /usr/include/mysql/mysql/psi/psi_memory.h \
-  /usr/include/mysql/mysql/psi/psi_base.h
+  /usr/include/mysql/mysql/psi/psi_base.h \
+  /home/jin/Documents/myIM/base/FriendModel.h
 
 CMakeFiles/tcp.dir/server/main.cpp.o: /home/jin/Documents/myIM/server/main.cpp \
   /usr/include/stdc-predef.h \
@@ -1317,6 +1319,8 @@ CMakeFiles/tcp.dir/server/main.cpp.o: /home/jin/Documents/myIM/server/main.cpp \
 /usr/include/boost/type_traits/remove_bounds.hpp:
 
 /usr/include/boost/type_traits/detail/is_function_cxx_11.hpp:
+
+/home/jin/Documents/myIM/base/FriendModel.h:
 
 /usr/include/boost/type_traits/is_function.hpp:
 

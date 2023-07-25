@@ -241,4 +241,5 @@ CMakeFiles/tcp.dir/base/tcpSession.cpp.o: \
  /usr/include/mysql/mysql/plugin_auth_common.h \
  /usr/include/mysql/typelib.h /usr/include/mysql/my_alloc.h \
  /usr/include/mysql/mysql/psi/psi_memory.h \
- /usr/include/mysql/mysql/psi/psi_base.h
+ /usr/include/mysql/mysql/psi/psi_base.h \
+ /home/jin/Documents/myIM/base/FriendModel.h

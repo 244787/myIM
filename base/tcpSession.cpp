@@ -57,7 +57,7 @@ void TcpSession::onMessage(const muduo::net::TcpConnectionPtr& conn,muduo::net::
             std::cout<<"解析文件失败"<<std::endl;
         }
         std::string str = writer.write(value);
-        //std::cout<<"receieve :"<<str; 
+        std::cout<<"receieve :"<<str<<std::endl;
         auto handler = chatHandler::GetInstance()->getHandler(value["cmd"].asInt());
         handler(conn,value,time);
         buffer->retrieve(len);

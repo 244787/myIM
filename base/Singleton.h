@@ -1,4 +1,4 @@
-#ifndef SIGNLETON_H_
+#ifndef SINGLETON_H_
 #define SINGLETON_H_
 #include <memory>
 #include <mutex>

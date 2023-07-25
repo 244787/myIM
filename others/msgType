@@ -1,0 +1,68 @@
+//注册
+    //客户端发送
+{
+    "cmd":"cmd_regist",
+    "account" :"    ",
+    "password": "  ",
+    "nickname": "   "
+}
+    //服务器回复
+{
+    "cmd":"cmd_regist",
+    "res": "yes" or "no"
+}
+
+//登录
+        //客户端发送
+{
+    "cmd":"cmd_login",
+    "account" :"    ",
+    "password": "  ",
+}
+    //服务器回复
+{
+    "cmd":"cmd_login",
+    "res": "yes" or "no"
+}
+
+//查找好友
+    //客户端发送
+    {
+        "cmd": "cmd_friend_search",
+        "account_sender" :"     ",
+        "nickname_sender":"      ",
+        "account_reciever":"     ",
+        "type":""
+    }
+        //服务器回复
+    {
+        "cmd":"cmd_friend_search"
+        "res": "yes" or "no",
+        find :"{           
+            "account" :"   ",
+            "nickname":"",
+            "status":"",
+            
+        }"
+    }
+//添加好友请求
+    //客户端
+    {
+        "cmd": "cmd_friend_request",
+        "account_sender" :"     ",
+        "nickname_sender":"      ",
+        "account_reciever":"     ",
+    }
+        //服务器回复
+    {
+        "cmd":"cmd_friend_request"
+        "res": "yes" or "no",
+        "reason":""
+    
+    }
+
+    
+
+
+
+

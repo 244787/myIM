@@ -46,6 +46,13 @@
         "type_traits": "cpp",
         "utility": "cpp",
         "typeindex": "cpp",
-        "typeinfo": "cpp"
+        "typeinfo": "cpp",
+        "bit": "cpp",
+        "memory": "cpp",
+        "string": "cpp",
+        "string_view": "cpp",
+        "map": "cpp",
+        "optional": "cpp",
+        "variant": "cpp"
     }
 }

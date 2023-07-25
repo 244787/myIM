@@ -1,5 +1,6 @@
 //消息队列,将收到的一个完整消息放入队列，等待处理线程去除消息进行消费
-
+#ifndef MESSAGEQUEUE_H_
+#define MESSAGEQUEUE_H_
 #include<memory>
 #include<mutex>
 #include<string>
@@ -31,3 +32,5 @@ class MessageQueue : public Singleton<MessageQueue>{
 
         
 };
+
+#endif
