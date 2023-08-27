@@ -61,7 +61,35 @@
     
     }
 
+//添加好友回复
+    //客户端
+    {
+        "cmd": "cmd_friend_response",
+        "account_sender" :"     ",
+        "account_reciever":"     ",
+        "reply":"yes","no"    }
+        //服务器回复
+    {
+        
+    }
+
+//好友聊天
+    //客户端
+    {
+        "cmd": "cmd_friend_chat",
+        "account_sender" :"     ",
+        
+        "account_reciever":"     ",
+        "type" :"",
+        "content":""
+    }
+        //服务器回复
+    {
+        "cmd":"cmd_friend_request"
+        "res": "yes" or "no",
+        "reason":""
     
+    }
 
 
 

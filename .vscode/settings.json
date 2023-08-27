@@ -54,5 +54,10 @@
         "map": "cpp",
         "optional": "cpp",
         "variant": "cpp"
+    },
+    "C_Cpp.files.exclude": {
+        
+        "**/.vscode": true,
+        "**/.vs": true
     }
 }

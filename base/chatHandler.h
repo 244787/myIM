@@ -10,6 +10,7 @@
 #include<functional>
 #include"UserModel.h"
 #include"FriendModel.h"
+#include"offlineMsgModel.h"
 using msgHandlerFnc = std::function<void(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time )>;
 
 
@@ -28,6 +29,9 @@ public:
     void friend_add_request(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time);
     void friend_add_respond(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time);
     void refresh_friend_list(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time);
+    void friend_chat(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time);
+    void set_icon(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time);
+    void get_offline_message(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time);
     msgHandlerFnc getHandler(int CmdId);
 
     void sendMsgWithHead(const muduo::net::TcpConnectionPtr& _conn, Json::Value& msg );
@@ -37,6 +41,7 @@ private:
     std::unordered_map<std::string,muduo::net::TcpConnectionPtr>  userMap;
     UserModel usrMd;
     FriendModel freindMd;
+    offlineMsgModel offMsgMd;
     std::mutex mtx;
 
 

@@ -9,11 +9,10 @@ include_directories(${PROJECT_SOURCE_DIR} /test)
 link_directories(usr/lib64)
 file(GLOB SRC_LIST ./base/*.cpp ./base/*.h  ./server/*.cpp)
 #set(SRC_LIST    ./base/*.cpp ./base/*.h ./server/main.c pp)
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 add_executable(tcp ${SRC_LIST})
 #aux_source_directory( . SRC_LIST)
-#add_library()
 target_link_libraries(tcp muduo_net muduo_base pthread jsoncpp )
-target_link_libraries(tcp /usr/lib64/mysql/libmysqlclient.so)
+target_link_libraries(tcp libmysqlclient.so)
 
 

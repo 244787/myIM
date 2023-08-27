@@ -1,10 +1,10 @@
 #ifndef MSG_H_
 #define MSG_H
-
 enum class command{
     cmd_regist = 0,
     cmd_login,
     cmd_logout,
+    cmd_offline_message,
     cmd_friend_search,
     cmd_add_friend_request,
     cmd_add_friend_response,

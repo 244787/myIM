@@ -4,13 +4,21 @@
 #include"UserModel.h"
  chatHandler::chatHandler(){
     msgHandlers.insert({static_cast<int>(command::cmd_login),std::bind(&chatHandler::login,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3)});
-    msgHandlers.insert({static_cast<int>(command::cmd_logout),std::bind(&chatHandler::login,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3)});
+    msgHandlers.insert({static_cast<int>(command::cmd_logout),std::bind(&chatHandler::logout,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3)});
     msgHandlers.insert({static_cast<int>(command::cmd_regist),std::bind(&chatHandler::regist,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3)});
     msgHandlers.insert({static_cast<int>(command::cmd_friend_search),std::bind(&chatHandler::friend_search,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3)});
     msgHandlers.insert({static_cast<int>(command::cmd_add_friend_request),std::bind(&chatHandler::friend_add_request,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3)});
     msgHandlers.insert({static_cast<int>(command::cmd_add_friend_response),std::bind(&chatHandler::friend_add_respond,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3)});
     msgHandlers.insert({static_cast<int>(command::cmd_friend_list),
         std::bind(&chatHandler::refresh_friend_list,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3)});
+    msgHandlers.insert({static_cast<int>(command::cmd_friend_chat),
+        std::bind(&chatHandler::friend_chat,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3)});
+    msgHandlers.insert({static_cast<int>(command::cmd_set_icon),
+        std::bind(&chatHandler::set_icon,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3)});
+    msgHandlers.insert({static_cast<int>(command::cmd_offline_message),
+        std::bind(&chatHandler::get_offline_message,this,std::placeholders::_1,std::placeholders::_2,std::placeholders::_3)});
+
+    
     
 
  }
@@ -25,33 +33,24 @@ void chatHandler::login(const muduo::net::TcpConnectionPtr& conn,Json::Value msg
     User usr =usrMd.query(acc);
     std::cout<<"accINDB:"<<usr.getAccount()<<"      pwdINDB"<<usr.getPassword()<<"\n";
     if(usr.getPassword()==pwd&&usr.getAccount()==acc){
-        std::cout<<"校验成功！"<<std::endl;
-        
-        userMap.insert({acc,conn});
+        //个人信息
         Json::Value res;
         res["cmd"] =  static_cast<int>(command::cmd_login);
         res["res"] = "yes";
         res["nickname"] = usr.getNickName();
         res["icon"] = usr.getIcon();
-        res["state"] = "online";
-
-        //修改在线消息
-
-        //获取离线消息
-
-        
-        //获取群组消息
-        
+        res["state"] = "online";        
         sendMsgWithHead(conn,res);
+
+        userMap.insert({acc,conn});
         usrMd.updateState("online",acc);
         
+        
     }else{
-        std::cout<<"校验失败！"<<std::endl;
         Json::Value res;
         res["cmd"] =  static_cast<int>(command::cmd_login);
         res["res"] = "no";
        
-
         sendMsgWithHead(conn,res);
         
     }
@@ -62,7 +61,7 @@ void chatHandler::login(const muduo::net::TcpConnectionPtr& conn,Json::Value msg
 void chatHandler::logout(const muduo::net::TcpConnectionPtr &conn, Json::Value msg, muduo::Timestamp time)
 {
     std::cout<<"开始处理下线逻辑";
-    std::string account = msg["cmd"].asString();
+    std::string account = msg["account_sender"].asString();
     {
         std::unique_lock<std::mutex> locker(mtx);
         auto it = userMap.find(account);
@@ -104,7 +103,7 @@ void chatHandler::friend_search(const muduo::net::TcpConnectionPtr &conn, Json::
 {
     std::cout<<"处理查找好友请求中..."<<std::endl;
     std::string fromAcc = msg["account_sender"].asString();
-    std::string toAcc = msg["account_receiver"].asString();
+    std::string toAcc = msg["account_reciever"].asString();
     //查找该用户是否存在
     vector<User> usrs;
     if(freindMd.search_friend(toAcc,usrs)){
@@ -139,7 +138,7 @@ void chatHandler::friend_add_request(const muduo::net::TcpConnectionPtr &conn, J
     std::cout<<"处理添加好友请求。。。"<<std::endl;
     //查看两人是否是好友
     std::string sender = msg["account_sender"].asString();
-    std::string receiver = msg["account_receiver"].asString();
+    std::string receiver = msg["account_reciever"].asString();
     std::string nickname_sender = msg["nickname_sender"].asString();
     char sql[1024];  
     sprintf(sql,"select * from Friend where  userAccount = \"%s\" AND friendAccount = \"%s\" ;",sender.c_str(),receiver.c_str());
@@ -160,18 +159,17 @@ void chatHandler::friend_add_request(const muduo::net::TcpConnectionPtr &conn, J
         //向用户发出请求
         //查询用户状态
         User rec = usrMd.query(receiver);
-
+        std::string account_reciever = rec.getAccount();
         std::string state = rec.getState();
-        if(1){
-            
-            Json::Value _res;
+        Json::Value _res;
             _res["cmd"] =  static_cast<int>(command::cmd_add_friend_request);
             _res["mode"] = "request";
             _res["account_sender"] = sender; 
             _res["nickname_sender"] = nickname_sender; 
-            _res["account_receiver"] = rec.getAccount();
+            _res["account_reciever"] = account_reciever;
             _res["beizhu"] = msg["beizhu"].asString();
-            
+        if(state == "online"){
+            //在线，直接向消息          
             auto it =userMap.find(rec.getAccount());
 
             if(it!=userMap.end())
@@ -179,6 +177,9 @@ void chatHandler::friend_add_request(const muduo::net::TcpConnectionPtr &conn, J
             else std::cout<<"好友不在线"<<std::endl;
         }else{
             //离线状态，将消息存在数据库中
+            auto it =userMap.find(rec.getAccount());
+
+            offMsgMd.pushMsg(account_reciever,_res.toStyledString());
         }
         //发送请求已发出的信息
         Json::Value res;
@@ -192,6 +193,19 @@ void chatHandler::friend_add_request(const muduo::net::TcpConnectionPtr &conn, J
 }
 void chatHandler::friend_add_respond(const muduo::net::TcpConnectionPtr &conn, Json::Value msg, muduo::Timestamp time)
 {
+    std::cout<<"处理添加好友回复开始"<<std::endl;
+
+    std::string account_reciever = msg["account_reciever"].asString();
+    std::string account_sender = msg["account_sender"].asString();
+    std::string reply = msg["reply"].asString();
+    if(reply == "yes"){
+        freindMd.insert(account_reciever,account_sender);
+        freindMd.insert(account_sender,account_reciever);
+    }else{
+
+    }
+
+    std::cout<<"处理添加好友结束"<<std::endl;
 
 }
 void chatHandler::refresh_friend_list(const muduo::net::TcpConnectionPtr &conn, Json::Value msg, muduo::Timestamp time)
@@ -210,6 +224,41 @@ void chatHandler::refresh_friend_list(const muduo::net::TcpConnectionPtr &conn, 
         }
         res["cmd"] = static_cast<int>(command::cmd_friend_list);
         sendMsgWithHead(conn,res);
+}
+void chatHandler::friend_chat(const muduo::net::TcpConnectionPtr &conn, Json::Value msg, muduo::Timestamp time)
+{
+    //开始处理好友聊天逻辑
+    std::cout<<"开始处理聊天逻辑\n";
+    std::string account_reciever = msg["account_reciever"].asString();
+    //std::cout<<msg.asString();
+    auto it = userMap.find(account_reciever);
+    if(it!=userMap.end()){
+        sendMsgWithHead(it->second,msg);
+    }else{
+        offMsgMd.pushMsg(account_reciever,msg.toStyledString());
+    }
+    std::cout<<"聊天逻辑结束\n";
+    //好友聊天逻辑处理j结束
+}
+void chatHandler::set_icon(const muduo::net::TcpConnectionPtr& conn,Json::Value msg,muduo::Timestamp time){
+    //开始处理更换头像逻辑
+    std::string url = msg["url"].asString();
+    std::string account = msg["account"].asString();
+    usrMd.setIcon(url,account);
+    //结束处理更换好友逻辑
+}
+void chatHandler::get_offline_message(const muduo::net::TcpConnectionPtr &conn, Json::Value msg, muduo::Timestamp time)
+{
+    //离线缓存信息
+    std::string acc=msg["account"].asString();
+    vector<std::string> vec = offMsgMd.pullMsg(acc);
+    for(const auto& v:vec){
+        Json::Reader reader;
+        Json::Value value;
+        reader.parse(v,value);
+        sendMsgWithHead(conn,value);
+    }
+    
 }
 msgHandlerFnc chatHandler::getHandler(int CmdId)
 {

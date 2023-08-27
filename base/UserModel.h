@@ -113,11 +113,22 @@ public:
             return false;
         }
         char  sql[1024];
-        sprintf(sql,"update set User \"state\"=\"%s\" where \"account\" =\"%s\";",state.c_str(),account.c_str());
+        sprintf(sql,"update  User set \"state\"=\"%s\" where \"account\" =\"%s\";",state.c_str(),account.c_str());
+        std::cout<<"sql:  "<<sql<<std::endl;
+        return  connMysql::GetInstance()->Update(sql);  
+    }
+    bool setIcon(std::string url,std::string account){
+        if(!connMysql::GetInstance()->MySQLIsConnected()){
+            std::cout<<"MySQL 离线!\n";
+            return false;
+        }
+        char  sql[1024];
+        sprintf(sql,"update  User set  icon= \"%s\" where account =\"%s\";",url.c_str(),account.c_str());
         std::cout<<"sql:  "<<sql<<std::endl;
         return  connMysql::GetInstance()->Update(sql);  
     }
 };
+
 
 
 #endif

@@ -35,6 +35,7 @@ void TcpSession::onMessage(const muduo::net::TcpConnectionPtr& conn,muduo::net::
     {
       // FIXME: use Buffer::peekInt32()
       const void* data = buffer->peek();
+      std::cout<<data<<std::endl;
       int32_t be32 = *static_cast<const int32_t*>(data); // SIGBUS//
 
 

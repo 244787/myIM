@@ -4,7 +4,8 @@ CREATE TABLE IF NOT EXISTs User(
     account VARCHAR(10)  PRIMARY KEY ,
     nickname VARCHAR(50)  NOT NULL  UNIQUE,
     password VARCHAR(50)  NOT NULL,
-    state ENUM('online', 'offline')  DEFAULT 'offline'
+    state ENUM('online', 'offline')  DEFAULT 'offline',
+    icon VARCHAR(50) NOT NULL DEFAULT ':/src/QQIcon/icon.jpg'
 );
 
 CREATE TABLE IF NOT EXISTs Friend(
@@ -30,6 +31,6 @@ CREATE TABLE IF NOT EXISTs GroupUser(
 
 CREATE TABLE IF NOT EXISTs OfflineMessage(
     userAccount VARCHAR(10)  NOT NULL,
-    message VARCHAR(500)  NOT NULL
+    message JSON NOT NULL
 );
 

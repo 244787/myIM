@@ -14,7 +14,7 @@ void connMysql::init() {
         mysql_set_character_set(m_mysql, "utf8");
         isConnected = true;
     }
-    Connect("127.0.0.1","root","123456","IMDB",0);
+    Connect("127.0.0.1","root","Linux666.","IMDB",0);
 
 }
 void connMysql::uninit() {
